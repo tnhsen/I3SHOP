@@ -1,0 +1,178 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - I3SHOP</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+
+        .sidenav {
+            height: 100%;
+            width: 50px;
+            position: fixed;
+            z-index: 1000;
+            top: 0;
+            left: 0;
+            background-color: black;
+            overflow-x: hidden;
+            transition: width 0.5s ease;
+            padding-top: 60px;
+            pointer-events: none; /* ป้องกันไม่ให้เมนูคลิกได้เมื่อเมนูไม่ขยาย */
+        }
+
+            .sidenav a {
+                display: block;
+                padding: 10px 20px;
+                text-decoration: none;
+                font-size: 25px;
+                color: white;
+                opacity: 0;
+                transform: translateX(-20px);
+                transition: opacity 0.5s ease, transform 0.5s ease;
+            }
+
+                .sidenav a:hover {
+                    color: #3572EF;
+                    transform: scale(1.2);
+                    opacity: 1;
+                }
+
+            .sidenav .toggle-btn {
+                position: absolute;
+                top: 10px;
+                left: 10px;
+                font-size: 30px;
+                color: white;
+                cursor: pointer;
+                z-index: 1001;
+                transition: left 0.5s ease, transform 0.3s ease;
+                pointer-events: auto; /* ทำให้ปุ่มสามารถคลิกได้เสมอ */
+            }
+
+                .sidenav .toggle-btn:hover {
+                    color: #3572EF;
+                    transform: scale(1.3);
+                }
+
+            .sidenav.expanded {
+                width: 250px;
+                pointer-events: auto; /* ทำให้เมนูคลิกได้เมื่อเมนูขยาย */
+            }
+
+                .sidenav.expanded a {
+                    opacity: 1;
+                    transform: translateX(0);
+                }
+
+                .sidenav.expanded .toggle-btn {
+                    left: 210px;
+                }
+
+                .sidenav.expanded a:hover {
+                    opacity: 1;
+                    transform: scale(1.2);
+                }
+
+        #main {
+            margin-left: 50px;
+            transition: margin-left 0.5s ease;
+            padding: 16px;
+        }
+
+            #main.expanded {
+                margin-left: 250px;
+            }
+
+        .user-link {
+            margin-top: 20px;
+            position: absolute;
+            bottom: 10px;
+            width: 100%;
+        }
+
+            .user-link a {
+                display: block;
+                text-decoration: none;
+                padding: 10px 20px;
+                color: white;
+                font-size: 20px;
+                text-align: center;
+                background-color: #333;
+                transition: background-color 0.3s;
+            }
+
+                .user-link a:hover {
+                    background-color: #3572EF;
+                    color: white;
+                }
+    </style>
+</head>
+<body>
+
+    <div id="mySidenav" class="sidenav">
+        <span class="toggle-btn" onclick="toggleNav()">
+            <i class="bi bi-list"></i>
+        </span>
+        <div>
+            @Html.ActionLink("Home", "Index", "Home", null, new { @class = "sidenav-link" })
+            @Html.ActionLink("Cart", "Index", "Home", null, new { @class = "sidenav-link" })
+            @Html.ActionLink("Products", "Index", "Home", null, new { @class = "sidenav-link" })
+            @Html.ActionLink("Promotion", "Index", "Home", null, new { @class = "sidenav-link" })
+            @Html.ActionLink("Community", "Index", "Home", null, new { @class = "sidenav-link" })
+
+
+
+            @Html.ActionLink("Support", "Index", "Home", null, new { @class = "sidenav-link" })
+            @Html.ActionLink("About", "About", "Home", null, new { @class = "sidenav-link" })
+        </div>
+
+        <!-- If login -->
+        <div class="user-link">
+            @if (User.Identity.IsAuthenticated)
+            {
+                <a href="@Url.Action("Index","Manage")">Welcome, @User.Identity.Name!</a>
+                using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "log" }))
+                {
+                @Html.AntiForgeryToken()
+                    <a href="javascript:void(0);" onclick="document.getElementById('logoutForm').submit();" style="color:white; padding: 10px 20px; text-decoration: none;">Logout</a>}
+            }
+            else
+            {
+                <a href="@Url.Action("Login", "Account")">Login</a>
+                <a href="@Url.Action("Register", "Account")">Register</a>
+            }
+        </div>
+    </div>
+
+    <div id="main">
+        @RenderBody()
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+
+
+
+    <script>
+        function toggleNav() {
+            const sidenav = document.getElementById("mySidenav");
+            const main = document.getElementById("main");
+
+            if (sidenav.classList.contains("expanded")) {
+                sidenav.classList.remove("expanded");
+                main.classList.remove("expanded");
+            } else {
+                sidenav.classList.add("expanded");
+                main.classList.add("expanded");
+            }
+        }
+    </script>
+    @RenderSection("scripts", required: false)
+
+</body>
+</html>
+
+
